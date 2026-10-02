@@ -4,7 +4,7 @@ fn e_id(name : String, pkg? : String) -> @syntax.Expr {
     None => Ident(name~)
     Some(pkg) => Dot(pkg~, id=name)
   }
-  Ident(id={ name: id, loc }, loc~)
+  Ident(id={ name: id, loc, }, loc~)
 }
 
 ///|
@@ -14,8 +14,8 @@ fn e_method(ty : String, name : String, pkg? : String) -> @syntax.Expr {
     Some(pkg) => Dot(pkg~, id=ty)
   }
   Method(
-    type_name={ name: id, is_object: false, loc },
-    method_name={ name, loc },
+    type_name={ name: id, is_object: false, loc, },
+    method_name={ name, loc, },
     loc~,
   )
 }
@@ -54,7 +54,7 @@ fn p_constr(
     _ =>
       Some(
         List::from_array(
-          args.map(pat => @syntax.ConstrPatArg::{ pat, kind: Positional }),
+          args.map(pat => @syntax.ConstrPatArg::{ pat, kind: Positional, }),
         ),
       )
   }
@@ -62,7 +62,7 @@ fn p_constr(
     loc~,
     constr=@syntax.Constructor::{
       extra_info,
-      name: @syntax.ConstrName::{ name, loc },
+      name: @syntax.ConstrName::{ name, loc, },
       loc,
     },
     args~,
@@ -76,7 +76,7 @@ fn p_case(
   body : @syntax.Expr,
   guard_? : @syntax.Expr,
 ) -> @syntax.Case {
-  @syntax.Case::{ pattern, body, guard_ }
+  @syntax.Case::{ pattern, body, guard_, }
 }
 
 ///|
@@ -98,7 +98,7 @@ fn e_constr(name : String, pkg? : String, ty? : String) -> @syntax.Expr {
     (None, None) => NoExtraInfo
   }
   @syntax.Expr::Constr(
-    constr={ name: @syntax.ConstrName::{ name, loc }, extra_info, loc },
+    constr={ name: @syntax.ConstrName::{ name, loc, }, extra_info, loc, },
     loc~,
   )
 }
@@ -111,14 +111,14 @@ fn e_match(expr : @syntax.Expr, cases : Array[@syntax.Case]) -> @syntax.Expr {
 ///|
 fn e_apply(func : @syntax.Expr, args : Array[@syntax.Expr]) -> @syntax.Expr {
   let args = List::from_array(
-    args.map(p => @syntax.Argument::{ value: p, kind: Positional }),
+    args.map(p => @syntax.Argument::{ value: p, kind: Positional, }),
   )
   Apply(func~, args~, loc~, attr=NoAttr)
 }
 
 ///|
 fn e_field(record : @syntax.Expr, field : String) -> @syntax.Expr {
-  Field(record~, accessor=@syntax.Accessor::Label({ name: field, loc }), loc~)
+  Field(record~, accessor=@syntax.Accessor::Label({ name: field, loc, }), loc~)
 }
 
 // ///|
@@ -171,7 +171,7 @@ fn p_map_elem(
   pat : @syntax.Pattern,
   match_absent? : Bool = false,
 ) -> @syntax.MapPatElem {
-  { key, pat, match_absent, key_loc: loc, loc }
+  { key, pat, match_absent, key_loc: loc, loc, }
 }
 
 ///|
@@ -180,7 +180,7 @@ fn e_record(fields : Array[(String, @syntax.Expr)]) -> @syntax.Expr {
     type_name=None,
     fields=List::from_array(
       fields.map(p => @syntax.FieldDef::{
-        label: { name: p.0, loc },
+        label: { name: p.0, loc, },
         is_pun: false,
         loc,
         expr: p.1,
@@ -222,7 +222,7 @@ fn e_map(elems : Array[(@syntax.Constant, @syntax.Expr)]) -> @syntax.Expr {
 
 ///|
 fn p_var(name : String) -> @syntax.Pattern {
-  @syntax.Pattern::Var({ name, loc })
+  @syntax.Pattern::Var({ name, loc, })
 }
 
 ///|

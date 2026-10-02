@@ -15,37 +15,37 @@ fn is_json_derive(
   let mut schema = Nothing
   for attr in attrs {
     match attr.parsed {
-      Some(Ident({ qual: Some(NAMESPACE), name: DERIVE })) => {
+      Some(Ident({ qual: Some(NAMESPACE), name: DERIVE, })) => {
         decode = Derive(private=false)
         encode = Derive(private=false)
         schema = Derive(private=false)
       }
-      Some(Apply({ qual: Some(NAMESPACE), name: DERIVE }, props)) =>
+      Some(Apply({ qual: Some(NAMESPACE), name: DERIVE, }, props)) =>
         for prop in props {
           match prop {
-            Expr(Ident({ qual: None, name: DECODE })) =>
+            Expr(Ident({ qual: None, name: DECODE, })) =>
               decode = Derive(private=false)
-            Expr(Ident({ qual: None, name: ENCODE })) =>
+            Expr(Ident({ qual: None, name: ENCODE, })) =>
               encode = Derive(private=false)
-            Expr(Ident({ qual: None, name: SCHEMA })) =>
+            Expr(Ident({ qual: None, name: SCHEMA, })) =>
               schema = Derive(private=false)
             _ => fail("Unsupported property in #\{NAMESPACE}.\{DERIVE}")
           }
         }
       // TODO: clean up duplicated code
-      Some(Ident({ qual: Some(NAMESPACE), name: PRIVATE_DERIVE })) => {
+      Some(Ident({ qual: Some(NAMESPACE), name: PRIVATE_DERIVE, })) => {
         decode = Derive(private=true)
         encode = Derive(private=true)
         schema = Derive(private=true)
       }
-      Some(Apply({ qual: Some(NAMESPACE), name: PRIVATE_DERIVE }, props)) =>
+      Some(Apply({ qual: Some(NAMESPACE), name: PRIVATE_DERIVE, }, props)) =>
         for prop in props {
           match prop {
-            Expr(Ident({ qual: None, name: DECODE })) =>
+            Expr(Ident({ qual: None, name: DECODE, })) =>
               decode = Derive(private=true)
-            Expr(Ident({ qual: None, name: ENCODE })) =>
+            Expr(Ident({ qual: None, name: ENCODE, })) =>
               encode = Derive(private=true)
-            Expr(Ident({ qual: None, name: SCHEMA })) =>
+            Expr(Ident({ qual: None, name: SCHEMA, })) =>
               schema = Derive(private=true)
             _ => fail("Unsupported property in #\{NAMESPACE}.\{DERIVE}")
           }
@@ -67,14 +67,14 @@ fn is_json_derive(
 // }
 
 ///|
-let pos : @basic.Position = { cnum: 0, fname: "", lnum: 0, bol: 0 }
+let pos : @basic.Position = { cnum: 0, fname: "", lnum: 0, bol: 0, }
 
 ///|
-let loc : @basic.Location = { start: pos, end: pos }
+let loc : @basic.Location = { start: pos, end: pos, }
 
 ///|
 fn mk_constr_id(constr : String) -> @syntax.ConstrId {
-  { id: Ident(name=constr), loc }
+  { id: Ident(name=constr), loc, }
 }
 
 // ///|
@@ -89,7 +89,7 @@ fn mk_json_object(map : Array[(String, @syntax.Expr)]) -> @syntax.Expr {
     .iter()
     .map(fn(p) {
       let key : @syntax.Constant = String(p.0)
-      { key, expr: p.1, key_loc: loc, loc }
+      { key, expr: p.1, key_loc: loc, loc, }
     }),
   )
   Map(elems~, loc~)
@@ -247,10 +247,10 @@ fn record_to_schema(fields : @list.List[@syntax.FieldDecl]) -> Schema raise {
   for field in fields {
     let name = field.name.label
     let description = try! field.doc.content
-      .iter()
-      .map(line => line.trim_start(char_set="\n\t ").to_string())
-      .join("\n")
-      .escape()[1:-1].to_string()
+    .iter()
+    .map(line => line.trim_start(char_set="\n\t ").to_string())
+    .join("\n")
+    .escape()[1:-1].to_string()
     let default = field_default(field.attrs)
     let enums = field_enumerate(field.attrs)
     let (schema, nullable) = match ty_to_schema(field.ty) {
@@ -273,7 +273,7 @@ fn record_to_schema(fields : @list.List[@syntax.FieldDecl]) -> Schema raise {
     if !nullable && default is None {
       required.push(name)
     }
-    properties.push({ name, type_: schema, default, description })
+    properties.push({ name, type_: schema, default, description, })
   }
   Object(properties~, required~)
 }
@@ -345,7 +345,7 @@ fn schema_to_ast(
         is_object: false,
         loc,
       }
-      let method_name : @syntax.Label = { name: "get_schema", loc }
+      let method_name : @syntax.Label = { name: "get_schema", loc, }
       let func = @syntax.Method(type_name~, method_name~, loc~)
       let get_schema_ast = @syntax.Apply(
         func~,
@@ -397,10 +397,10 @@ fn derive_schema(
       let definitions = []
       let entries = schema_to_ast(schema, definitions~)
       let description = try! decl.doc.content
-        .iter()
-        .map(line => line.trim_start(char_set="\n\t ").to_string())
-        .join("\n")
-        .escape()[1:-1].to_string()
+      .iter()
+      .map(line => line.trim_start(char_set="\n\t ").to_string())
+      .join("\n")
+      .escape()[1:-1].to_string()
       if description != "" {
         entries.push(("description", e_string(description)))
       }
@@ -413,7 +413,7 @@ fn derive_schema(
     }
   }
   let attr_generated : @attribute.Attribute = {
-    parsed: Some(Ident({ qual: Some(NAMESPACE), name: GENERATED })),
+    parsed: Some(Ident({ qual: Some(NAMESPACE), name: GENERATED, })),
     raw: "",
     loc,
   }
@@ -428,8 +428,8 @@ fn derive_schema(
     Pub(attr=None, loc~)
   }
   let fun_decl : @syntax.FunDecl = {
-    type_name: Some({ name: Ident(name=decl.tycon), is_object: false, loc }),
-    name: { name: "get_schema", loc },
+    type_name: Some({ name: Ident(name=decl.tycon), is_object: false, loc, }),
+    name: { name: "get_schema", loc, },
     has_error: None,
     is_async: false,
     decl_params: Some(@list.empty()),
@@ -526,7 +526,7 @@ fn derive_decode(
     }
   }
   let attr_generated : @attribute.Attribute = {
-    parsed: Some(Ident({ qual: Some(NAMESPACE), name: GENERATED })),
+    parsed: Some(Ident({ qual: Some(NAMESPACE), name: GENERATED, })),
     raw: "",
     loc,
   }
@@ -536,7 +536,7 @@ fn derive_decode(
     Pub(attr=None, loc~)
   }
   let self_ty : @syntax.Type = Name(
-    constr_id={ id: Ident(name=decl.tycon), loc },
+    constr_id={ id: Ident(name=decl.tycon), loc, },
     tys=empty(),
     loc~,
   )
@@ -545,11 +545,11 @@ fn derive_decode(
     is_object: false,
     loc,
   }
-  let decode_method : @syntax.Binder = { name: "decode", loc }
+  let decode_method : @syntax.Binder = { name: "decode", loc, }
   let body : @syntax.DeclBody = DeclBody(local_types=empty(), expr~)
   let params = [
-    @syntax.Parameter::Positional(binder={ name: "self", loc }, ty=None),
-    @syntax.Parameter::Positional(binder={ name: "path", loc }, ty=None),
+    @syntax.Parameter::Positional(binder={ name: "self", loc, }, ty=None),
+    @syntax.Parameter::Positional(binder={ name: "path", loc, }, ty=None),
   ]
   TopImpl(
     trait_=decode_trait,
@@ -621,7 +621,7 @@ fn derive_encode(
     }
   }
   let attr_generated : @attribute.Attribute = {
-    parsed: Some(Ident({ qual: Some(NAMESPACE), name: GENERATED })),
+    parsed: Some(Ident({ qual: Some(NAMESPACE), name: GENERATED, })),
     raw: "",
     loc,
   }
@@ -631,7 +631,7 @@ fn derive_encode(
     Pub(attr=None, loc~)
   }
   let self_ty : @syntax.Type = Name(
-    constr_id={ id: Ident(name=decl.tycon), loc },
+    constr_id={ id: Ident(name=decl.tycon), loc, },
     tys=empty(),
     loc~,
   )
@@ -640,10 +640,10 @@ fn derive_encode(
     is_object: false,
     loc,
   }
-  let decode_method : @syntax.Binder = { name: "encode", loc }
+  let decode_method : @syntax.Binder = { name: "encode", loc, }
   let body : @syntax.DeclBody = DeclBody(local_types=empty(), expr~)
   let params = [
-    @syntax.Parameter::Positional(binder={ name: "self", loc }, ty=None),
+    @syntax.Parameter::Positional(binder={ name: "self", loc, }, ty=None),
   ]
   TopImpl(
     trait_=decode_trait,
@@ -678,10 +678,12 @@ fn visit_top_type_def(env : Env, decl : @syntax.TypeDecl) -> Unit raise {
 
 ///|
 pub fn derive_json(impls : @syntax.Impls) -> @syntax.Impls raise {
-  let self : Env = { generated: [] }
-  impls.each(impl_ => match impl_ {
-    TopTypeDef(decl) => visit_top_type_def(self, decl)
-    _ => ()
+  let self : Env = { generated: [], }
+  impls.each(impl_ => {
+    match impl_ {
+      TopTypeDef(decl) => visit_top_type_def(self, decl)
+      _ => ()
+    }
   })
   List::from_array(self.generated)
 }

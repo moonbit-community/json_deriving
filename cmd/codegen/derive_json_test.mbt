@@ -148,7 +148,6 @@ test "panic - invalid T with default" {
     #|}
   let (ast, _) = @parser.parse_string(source)
   let _ = derive_json(ast)
-
 }
 
 ///|
@@ -160,7 +159,6 @@ test "panic - invalid nested option" {
     #|}
   let (ast, _) = @parser.parse_string(source)
   let _ = derive_json(ast)
-
 }
 
 ///|
