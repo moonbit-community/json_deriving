@@ -79,7 +79,7 @@ pub fn eprintln(msg : String) -> Unit {
 }
 
 ///|
-pub fn[T] exit(code : Int) -> T {
+pub fn[T] exit(code : Int32) -> T {
   @wasi.proc_exit(code.reinterpret_as_uint())
   panic()
 }

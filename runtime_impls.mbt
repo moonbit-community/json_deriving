@@ -1,10 +1,10 @@
 ///|
-pub impl Encode for Int with fn encode(self) {
+pub impl Encode for Int32 with fn encode(self) {
   Json::number(self.to_double())
 }
 
 ///|
-pub impl Decode for Int with fn decode(self, path) {
+pub impl Decode for Int32 with fn decode(self, path) {
   match self {
     Number(n, ..) => n.to_int()
     _ => fail(path, self)
@@ -85,12 +85,12 @@ pub impl Decode for Int64 with fn decode(self, path) {
 }
 
 ///|
-pub impl Encode for UInt with fn encode(self) {
+pub impl Encode for UInt32 with fn encode(self) {
   Json::number(self.to_double())
 }
 
 ///|
-pub impl Decode for UInt with fn decode(self, path) {
+pub impl Decode for UInt32 with fn decode(self, path) {
   match self {
     Number(n, ..) => if n >= 0.0 { n.to_uint() } else { fail(path, self) }
     _ => fail(path, self)
