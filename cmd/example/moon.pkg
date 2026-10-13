@@ -1,12 +1,13 @@
-{
+import {
+  "moonbitlang/json_deriving",
+}
+
+options(
   "pre-build": [
     {
       "command": "set -o pipefail && cat $input | wasmer run --dir $mod_dir . | moonfmt - > $output",
       "input": "input.mbt",
-      "output": "output.mbt"
-    }
+      "output": "output.mbt",
+    },
   ],
-  "import": [
-    "moonbitlang/json_deriving"
-  ]
-}
+)

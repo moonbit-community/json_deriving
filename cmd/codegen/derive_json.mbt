@@ -297,7 +297,7 @@ type Definitions = Array[(String, @syntax.Expr)]
 ///|
 fn schema_to_ast(
   schema : Schema,
-  nullable? : Bool = false,
+  nullable~ : Bool = false,
   definitions~ : Definitions,
 ) -> Entries {
 

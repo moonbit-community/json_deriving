@@ -28,8 +28,8 @@ fn p_any() -> @syntax.Pattern {
 ///|
 fn p_constr(
   name : String,
-  args? : Array[@syntax.Pattern] = [],
-  open? : Bool = false,
+  args~ : Array[@syntax.Pattern] = [],
+  open~ : Bool = false,
   pkg? : String,
   ty? : String,
 ) -> @syntax.Pattern {
@@ -169,7 +169,7 @@ fn p_map(elems : Array[@syntax.MapPatElem]) -> @syntax.Pattern {
 fn p_map_elem(
   key : @syntax.Constant,
   pat : @syntax.Pattern,
-  match_absent? : Bool = false,
+  match_absent~ : Bool = false,
 ) -> @syntax.MapPatElem {
   { key, pat, match_absent, key_loc: loc, loc, }
 }

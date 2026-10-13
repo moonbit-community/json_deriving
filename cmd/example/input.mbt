@@ -17,7 +17,7 @@ pub struct Params {
   file_pattern : String?
   /// Number of context lines to show before and after each match. Defaults to 2.
   #json.default(integer("2"))
-  context_lines : Int?
+  context_lines : Int32?
   /// The search pattern. 
   /// For 'regex' kind: regular expression pattern with full regex syntax. 
   /// For 'moonbit_definition' kind: symbol name or partial name (can be imprecise) for fuzzy symbolic search.
@@ -28,7 +28,7 @@ pub struct Params {
 #json.derive
 struct Table {
   head : Params
-  tail : Array[Int]
+  tail : Array[Int32]
   tail2 : Array[Double?]
 } derive(Show)
 

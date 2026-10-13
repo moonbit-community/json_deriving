@@ -2,7 +2,7 @@
 pub(all) enum Path {
   Root
   Key(Path, String)
-  Index(Path, Int)
+  Index(Path, Int32)
 } derive(Eq)
 
 ///|

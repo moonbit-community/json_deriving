@@ -1,0 +1,13 @@
+import {
+  "moonbitlang/parser/basic",
+  "moonbitlang/parser",
+  "moonbitlang/formatter",
+  "peter-jerry-ye/wasi",
+  "moonbitlang/json_deriving_codegen",
+}
+
+pkgtype(kind: "executable")
+
+options(
+  link: { "wasm": { "export-memory-name": "memory" } },
+)
